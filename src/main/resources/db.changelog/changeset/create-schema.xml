@@ -1,0 +1,54 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+  <changeSet id="1" author="Kolesov">
+    <sql>
+      CREATE TABLE "employees"
+      (
+        "id"           serial       NOT NULL,
+        "first_name"   varchar(100),
+        "last_name"    varchar(100),
+        "email"        varchar(100) NOT NULL,
+        "number_phone" varchar(11),
+        CONSTRAINT "employees_pk" PRIMARY KEY ("id")
+      );
+
+      CREATE TABLE "projects"
+      (
+        "id"          serial       NOT NULL,
+        "name"        varchar(100),
+        "address"     varchar(100),
+        "date_start"  DATE,
+        "date_finish" DATE,
+        CONSTRAINT "projects_pk" PRIMARY KEY ("id")
+      );
+
+      CREATE TABLE "positions"
+      (
+        "id"   serial       NOT NULL,
+        "name" varchar(100) NOT NULL UNIQUE,
+        CONSTRAINT "positions_pk" PRIMARY KEY ("id")
+      );
+
+      CREATE TABLE "project_employee"
+      (
+        "id"            serial NOT NULL,
+        "employee_id"   bigint NOT NULL,
+        "position_id"   bigint NOT NULL,
+        "project_id"    bigint NOT NULL,
+        "entrance_date" DATE   NOT NULL,
+        "leave_date"    DATE,
+        CONSTRAINT "project_employee_pk" PRIMARY KEY ("id")
+      );
+
+      ALTER TABLE "project_employee"
+        ADD CONSTRAINT "project_employee_employee" FOREIGN KEY ("employee_id") REFERENCES "employees" ("id");
+      ALTER TABLE "project_employee"
+        ADD CONSTRAINT "project_employee_position" FOREIGN KEY ("position_id") REFERENCES "positions" ("id");
+      ALTER TABLE "project_employee"
+        ADD CONSTRAINT "project_employee_project" FOREIGN KEY ("project_id") REFERENCES "projects" ("id");
+    </sql>
+  </changeSet>
+</databaseChangeLog>
